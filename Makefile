@@ -4,7 +4,7 @@ OBJECTS = main.o Triangle.o Shapes.o Message.o Arc.o
 
 ########################################
 ## DO NOT EDIT ANYTHING BELOW THIS LINE!
-TARGET = main.cpp.o
+TARGET = main
 
 CXX    = g++
 CFLAGS = -Wall -g -O3 -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0
