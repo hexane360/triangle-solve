@@ -6,12 +6,12 @@ OBJECTS = main.o Triangle.o Shapes.o Message.o Arc.o
 ## DO NOT EDIT ANYTHING BELOW THIS LINE!
 TARGET = main
 
-CXX    = g++
-CFLAGS = -Wall -g -O3 -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0
+CXX    = clang
+CFLAGS = -Wall -g -O3 -std=c++1y -stdlib=libstdc++ -D_GLIBCXX_USE_CXX11_ABI=0
 
 INCPATH += -I/usr/include
 LIBPATH += -L/usr/lib
-LIBS += -lsfml-graphics -lsfml-window -lsfml-system
+LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lstdc++ -lm
 
 # If the first argument is "debug"...
 ifeq (debug,$(firstword $(MAKECMDGOALS)))
