@@ -10,6 +10,7 @@ using namespace sf;
 #include "Shapes.h"
 #include "Message.h"
 #include "constants.h"
+#include "files.h"
 
 class Triangle : public Drawable {
     public:

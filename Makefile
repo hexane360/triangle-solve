@@ -1,54 +1,68 @@
-## Update the list of Object files the compiler should generate
-## We will need an object file for each of our cpp files
-OBJECTS = main.o Triangle.o Shapes.o Message.o Arc.o
+TARGET  ?= triangle-solve
+PREFIX  ?= /usr/local
+BINDIR  ?= $(PREFIX)/bin
+DATADIR ?= $(PREFIX)/share
 
-########################################
-## DO NOT EDIT ANYTHING BELOW THIS LINE!
-TARGET = main
+CXX      ?= cxx
+CXXFLAGS ?= -Wall -O3 -std=c++14
+CXXFLAGS += -DDATA_DIR=\"$(DATADIR)/$(TARGET)/\"
 
-CXX    = clang
-CFLAGS = -Wall -g -O3 -std=c++1y -stdlib=libstdc++ -D_GLIBCXX_USE_CXX11_ABI=0
+#can fix some std::basic_string linker errors
+#CXXFLAGS += -D_GLIBCXX_USE_CXX11_ABI=0
 
 INCPATH += -I/usr/include
 LIBPATH += -L/usr/lib
-LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lstdc++ -lm
+LIBS    += -lsfml-graphics -lsfml-window -lsfml-system -lstdc++ -lm
 
 # If the first argument is "debug"...
 ifeq (debug,$(firstword $(MAKECMDGOALS)))
-  CFLAGS += -ggdb3 -o0
+	CFLAGS += -g -O0
+	CXXFLAGS += -g -O0
 endif
 
+OBJECTS = main.o Triangle.o Shapes.o Message.o Arc.o
+DEPS = $(OBJECTS:.o=.d)
+
+.PHONY: all
 all: $(TARGET)
 
+-include $(DEPS)
+
+.PHONY: debug
 debug: $(TARGET)
 
+.PHONY: clean
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(OBJECTS) $(TARGET) $(DEPS)
 
-depend:
-	rm -f Makefile.bak
-	mv Makefile Makefile.bak
-	sed '/^# DEPENDENCIES/,$$d' Makefile.bak > Makefile
-	echo '# DEPENDENCIES' >> Makefile
-	$(CXX) -MM *.cpp >> Makefile
+%.d: %.cpp
+	@$(CXX) $(CXXFLAGS) $(INCPATH) $< -MM -MT $(@:.d=.o) >$@
 
-.c.o:
-	$(CXX) $(CFLAGS) $(INCPATH) -c -o $@ $<
-
-.cc.o:
-	$(CXX) $(CFLAGS) $(INCPATH) -c -o $@ $<
-
-.cpp.o:
+%.o:
 	@echo "Compiling $@"
-	$(CXX) $(CFLAGS) $(INCPATH) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking $@"
-	$(CXX) $(CFLAGS) $(INCPATH) -o $@ $^ $(LIBPATH) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(INCPATH) -o $@ $^ $(LIBPATH) $(LIBS)
 
+.PHONY: compile
 compile: $(OBJECTS)
 
+.PHONY: run
 run: $(TARGET)
 	./$(TARGET)
 
-# DEPENDENCIES
+makefile := $(current_makefile)
+#install should recompile header that uses DATADIR
+.PHONY: install
+install:
+	touch files.h
+	make .install
+
+.PHONY: .install
+.install: $(TARGET)
+	@echo "Installing to $(BINDIR)"
+	mkdir -p "$(BINDIR)" "$(DATADIR)/$(TARGET)"
+	cp $(TARGET) "$(BINDIR)"
+	cp -r data/* "$(DATADIR)/$(TARGET)"

@@ -1,8 +1,5 @@
 #pragma once
-#include <string>
 #include <SFML/Graphics.hpp>
-
-static const std::string FONT_FILE = "data/OpenSans-Regular.ttf";
 
 static const int BOX_WIDTH = 360; //Message box dimensions
 static const int BOX_HEIGHT = 240;

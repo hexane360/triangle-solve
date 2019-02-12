@@ -3,9 +3,10 @@ using namespace std;
 
 Triangle::Triangle() {
     //cout << "Triangle::Triangle()\n";
-    if (!_mainFont.loadFromFile(FONT_FILE)) {
-        cout << "Failed to load font file \"" << FONT_FILE << "\"\n";
-        exit(EXIT_FAILURE);
+    if (!_mainFont.loadFromFile(FONT_PATH)) {
+        if (!_mainFont.loadFromFile(INSTALLED_FONT_PATH)) {
+            exit(EXIT_FAILURE);
+        }
     }
     for (int i = 0; i < 3; i++) { //pass same font object to all shapes
         _angles[i].setFont(_mainFont);

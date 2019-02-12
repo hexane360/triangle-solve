@@ -1,16 +1,3 @@
-/* CSCI 261 Final:
- *
- * Authors: Colin Gilgenbach    cgilgenbach     cgilgenbach@mines.edu
- *          Anli Ni             anlini          anlini@mines.edu
- * Description: Graphical triangle solver to find triangles given side lengths and angles
- *
- * Objective:
- * -Display the triangle
- * -Use classes to seperate code and represent data
- * -Use arrays to store data efficienty
- * -Develop large scale code incrementally
- * -Make use of SFML to create a complete graphical program
- */
 #include <iostream>
 using namespace std;
 
